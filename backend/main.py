@@ -4,12 +4,15 @@ from app.models import TrainingRequest, LapTimePredictRequest, StrategyRequest
 from app.inference import predict_lap_time
 from app.strategy import get_strategy_recommendation_from_llm
 from app.validate import validate_and_train
+import os
 
 app = FastAPI()
 
+origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
+origins = [origin.strip() for origin in origins if origin.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
