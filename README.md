@@ -13,6 +13,12 @@
 
 ---
 
+## 🌟Live Demo
+
+Experience the app live here: [f1-strategy-ai](https://f1-strategy-ai.vercel.app)
+
+---
+
 ## 🖥️ Demo Pages
 
 - **🏠 Home Page**  
@@ -61,7 +67,7 @@ F1 Strategy AI is a powerful, easy-to-use platform that enables users to:
 
 ---
 
-## 🛠 Installation
+## 🛠 Installation(For Local Development)
 
 ### 1. Clone the Repository
 
@@ -70,7 +76,7 @@ git clone https://github.com/pritpagda/f1-strategy-ai.git
 cd f1-strategy-ai
 ```
 
-### 2. Backend Setup (FastAPI + MongoDB)
+### 2. Backend Setup (FastAPI)
 
 ```bash
 cd backend
@@ -87,6 +93,7 @@ Create a `.env` file in the `backend` folder and add your environment variables:
 
 ```
 GEMINI_API_KEY=your_api_key_here
+ALLOWED_ORIGINS=http://localhost:3000
 ```
 
 Start the backend server:
@@ -100,10 +107,18 @@ uvicorn main:app --reload
 ```bash
 cd ../frontend
 npm install
+```
+Create a `.env` file in the `frontend` folder and add your environment variables:
+
+```
+REACT_APP_URL=http://127.0.0.1:8000
+```
+Start the React development server:
+```
 npm start
 ```
-
-Visit [http://localhost:3000](http://localhost:3000) to access the app.
+### 4. Access the Application
+Open your browser and go to: [http://localhost:3000](http://localhost:3000)
 
 ---
 
