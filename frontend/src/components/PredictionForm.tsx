@@ -9,36 +9,44 @@ export interface ModalContent {
     type: 'success' | 'error' | 'info' | 'warning' | '';
 }
 
+
 interface PredictionFormProps {
     onPredict: (seconds: number) => void;
     onShowModal: (modalData: ModalContent) => void;
     apiBaseUrl?: string;
 }
 
-const PredictionForm: React.FC<PredictionFormProps> = ({onPredict, onShowModal}) => {
+const PredictionForm: React.FC<PredictionFormProps> = ({onPredict, onShowModal, apiBaseUrl}) => {
     const [data, setData] = useState<PredictionData>(defaultPredictionData);
     const [loading, setLoading] = useState(false);
 
+
     const handleInputChange = (field: keyof PredictionData, value: any) => {
-        setData(prev => ({...prev, [field]: value}));
+        setData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
     };
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+
         setLoading(true);
         try {
             const response = await api.post('/api/predict', data);
-            onPredict(response.data.predicted_lap_time_seconds);
+            const responseData = response.data;
+
+            onPredict(responseData.predicted_lap_time_seconds);
             onShowModal({
                 title: 'Prediction Successful',
                 message: 'Lap time predicted with high accuracy.',
                 type: 'success',
             });
         } catch (err: any) {
-            console.error('Prediction Error:', err);
+            console.error('Prediction API Error:', err);
             onShowModal({
                 title: 'Prediction Failed',
-                message: err.message || 'Prediction failed. Please try again.',
+                message: err.message || 'Could not get prediction. Please check your inputs and try again.',
                 type: 'error',
             });
         } finally {
@@ -46,91 +54,216 @@ const PredictionForm: React.FC<PredictionFormProps> = ({onPredict, onShowModal})
         }
     };
 
-    const inputs = [
-        {id: 'compound', type: 'select', label: 'Compound', options: ['Soft', 'Medium', 'Hard']},
-        {id: 'stint', type: 'number', label: 'Stint'},
-        {id: 'lap_number', type: 'number', label: 'Lap Number'},
-        {id: 'tyre_life', type: 'number', label: 'Tyre Life (laps)'},
-        {id: 'track_status', type: 'number', label: 'Track Status'},
-        {id: 'air_temp', type: 'number', label: 'Air Temp (°C)'},
-        {id: 'track_temp', type: 'number', label: 'Track Temp (°C)'},
-        {id: 'humidity', type: 'number', label: 'Humidity (%)'},
-        {id: 'wind_speed', type: 'number', label: 'Wind Speed (m/s)'},
-        {id: 'fresh_tyre', type: 'select', label: 'Fresh Tyre', options: ['Yes', 'No']},
-        {id: 'team', type: 'text', label: 'Team'},
-        {id: 'driver', type: 'text', label: 'Driver'}
-    ];
-
     return (
         <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded-xl">
-            <h2 className="text-xl font-bold mb-4 flex items-center justify-center text-white gap-2">
+            <h2 className="text-xl font-bold mb-4 flex items-center justify-center space-x-2 text-white">
                 <Zap className="h-5 w-5 text-red-500 animate-pulse"/>
                 <span>Prediction Parameters</span>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {inputs.map(({id, type, label, options}) => (
-                    <div key={id}>
-                        <label htmlFor={id} className="block text-gray-300 font-semibold text-sm mb-1">
-                            {label} <span className="text-red-400">*</span>
-                        </label>
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="compound">
+                        Compound <span className="text-red-400">*</span>
+                    </label>
+                    <select
+                        id="compound"
+                        value={data.compound}
+                        onChange={(e: ChangeEvent<HTMLSelectElement>) => handleInputChange('compound', e.target.value)}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner appearance-none"
+                        required
+                    >
+                        <option value="" disabled>Select compound</option>
+                        <option value="Soft">Soft</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+                    </select>
+                </div>
 
-                        {type === 'select' ? (
-                            <select
-                                id={id}
-                                value={
-                                    id === 'fresh_tyre'
-                                        ? data.fresh_tyre
-                                            ? 'Yes'
-                                            : 'No'
-                                        : (data as any)[id]
-                                }
-                                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                                    handleInputChange(
-                                        id as keyof PredictionData,
-                                        id === 'fresh_tyre' ? e.target.value === 'Yes' : e.target.value
-                                    )
-                                }
-                                className="w-full p-2 rounded-md bg-gray-900/70 text-white border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50"
-                                required
-                            >
-                                <option value="" disabled>Select option</option>
-                                {options?.map((opt) => (
-                                    <option key={opt} value={opt}>
-                                        {opt}
-                                    </option>
-                                ))}
-                            </select>
-                        ) : (
-                            <input
-                                id={id}
-                                type={type}
-                                value={
-                                    (data as any)[id] === 0 ? '' : (data as any)[id]
-                                }
-                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                    handleInputChange(
-                                        id as keyof PredictionData,
-                                        e.target.value === '' ? '' : type === 'number' ? Number(e.target.value) : e.target.value
-                                    )
-                                }
-                                className="w-full p-2 rounded-md bg-gray-900/70 text-white border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50"
-                                placeholder={`e.g. ${type === 'number' ? '1' : ''}`}
-                                required
-                            />
-                        )}
-                    </div>
-                ))}
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="stint">
+                        Stint <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="stint"
+                        type="number"
+                        value={data.stint === 0 ? '' : data.stint}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('stint', e.target.value === '' ? '' : Number(e.target.value))}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        min={1}
+                        placeholder="e.g. 1"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="lap_number">
+                        Lap Number <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="lap_number"
+                        type="number"
+                        value={data.lap_number === 0 ? '' : data.lap_number}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('lap_number', e.target.value === '' ? '' : Number(e.target.value))}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        min={1}
+                        placeholder="e.g. 15"
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="tyre_life">
+                        Tyre Life (laps) <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="tyre_life"
+                        type="number"
+                        value={data.tyre_life === 0 ? '' : data.tyre_life}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('tyre_life', e.target.value === '' ? '' : Number(e.target.value))}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        min={1}
+                        placeholder="e.g. 5"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="track_status">
+                        Track Status <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="track_status"
+                        type="number"
+                        value={data.track_status === 0 ? '' : data.track_status}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('track_status', e.target.value === '' ? '' : Number(e.target.value))}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        min={1}
+                        placeholder="e.g. 1"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="air_temp">
+                        Air Temperature (°C) <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="air_temp"
+                        type="number"
+                        value={data.air_temp === 0 ? '' : data.air_temp}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('air_temp', e.target.value === '' ? '' : Number(e.target.value))}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        placeholder="e.g. 25"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="track_temp">
+                        Track Temperature (°C) <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="track_temp"
+                        type="number"
+                        value={data.track_temp === 0 ? '' : data.track_temp}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('track_temp', e.target.value === '' ? '' : Number(e.target.value))}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        placeholder="e.g. 32"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="humidity">
+                        Humidity (%) <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="humidity"
+                        type="number"
+                        value={data.humidity === 0 ? '' : data.humidity}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('humidity', e.target.value === '' ? '' : Number(e.target.value))}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        min={0}
+                        max={100}
+                        placeholder="e.g. 45"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="wind_speed">
+                        Wind Speed (m/s) <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="wind_speed"
+                        type="number"
+                        value={data.wind_speed === 0 ? '' : data.wind_speed}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('wind_speed', e.target.value === '' ? '' : Number(e.target.value))}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        min={0}
+                        placeholder="e.g. 3"
+                        required
+                    />
+                </div>
+
+
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="fresh_tyre">
+                        Fresh Tyre <span className="text-red-400">*</span>
+                    </label>
+                    <select
+                        id="fresh_tyre"
+                        value={data.fresh_tyre ? "true" : "false"}
+                        onChange={(e: ChangeEvent<HTMLSelectElement>) => handleInputChange('fresh_tyre', e.target.value === "true")}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner appearance-none"
+                        required
+                    >
+                        <option value="" disabled>Select option</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="team">
+                        Team <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="team"
+                        type="text"
+                        value={data.team}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('team', e.target.value)}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        placeholder="e.g. Red Bull"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-300 font-semibold text-sm mb-1" htmlFor="driver">
+                        Driver <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                        id="driver"
+                        type="text"
+                        value={data.driver}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('driver', e.target.value)}
+                        className="w-full p-2 rounded-md bg-gray-900/70 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all duration-300 shadow-inner"
+                        placeholder="e.g. Verstappen"
+                        required
+                    />
+                </div>
             </div>
 
             <div className="pt-4">
                 <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-full font-extrabold text-base transition-all
-            ${loading
+                    className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-full font-extrabold text-base transition-all duration-300 transform
+                        ${loading
                         ? 'bg-red-900/60 text-red-300 cursor-not-allowed border border-red-900'
-                        : 'bg-red-600 hover:bg-red-700 active:scale-[0.98] shadow-lg hover:shadow-red-500/40'}`}
+                        : 'bg-red-600 hover:bg-red-700 active:scale-[0.98] shadow-lg hover:shadow-red-500/40'
+                    } `}
                 >
                     {loading ? (
                         <>
@@ -147,6 +280,6 @@ const PredictionForm: React.FC<PredictionFormProps> = ({onPredict, onShowModal})
             </div>
         </form>
     );
-};
+}
 
 export default PredictionForm;
