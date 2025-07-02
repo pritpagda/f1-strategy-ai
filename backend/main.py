@@ -1,9 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from models import TrainingRequest, LapTimePredictRequest, StrategyRequest
-from inference import predict_lap_time
-from strategy import get_strategy_recommendation_from_llm
-from validate import validate_and_train
+from app.models import TrainingRequest, LapTimePredictRequest, StrategyRequest
+from app.inference import predict_lap_time
+from app.strategy import get_strategy_recommendation_from_llm
+from app.validate import validate_and_train
 
 app = FastAPI()
 
