@@ -1,7 +1,7 @@
 import React from 'react';
-import { Car, Clock, BarChart3, Settings, Zap, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button'; // Assuming Button is a separate, already styled component
+import {Car, Clock, BarChart3, Settings, Zap, ChevronRight} from 'lucide-react';
+import {useNavigate} from 'react-router-dom';
+import Button from '../components/Button';
 
 const LandingPage = () => {
     const navigate = useNavigate();
@@ -24,16 +24,16 @@ const LandingPage = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 relative overflow-hidden font-inter p-4">
-            {/* Dynamic Background Effects */}
+        <div
+            className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 relative overflow-hidden font-inter p-4">
             <div className="absolute inset-0 opacity-20 z-0">
                 <div className="absolute top-8 left-1/4 w-80 h-80 bg-red-500/30 rounded-full blur-3xl"/>
                 <div className="absolute bottom-8 right-1/4 w-72 h-72 bg-orange-500/20 rounded-full blur-3xl"/>
-                <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-red-400/10 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"/>
+                <div
+                    className="absolute top-1/2 left-1/2 w-64 h-64 bg-red-400/10 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"/>
             </div>
 
             <div className="relative z-10 container mx-auto px-4 max-w-6xl py-10">
-                {/* Hero Section */}
                 <div className="text-center mb-16">
                     <div className="flex justify-center items-center mb-6 group">
                         <div className="relative p-1.5">
@@ -52,7 +52,6 @@ const LandingPage = () => {
                     </div>
                 </div>
 
-                {/* CTA Section */}
                 <div className="text-center mb-16">
                     <div
                         className="bg-black/50 backdrop-blur-xl border border-red-500/40 rounded-2xl p-8 max-w-4xl mx-auto shadow-2xl hover:border-red-400/60 transition-all duration-500 group relative overflow-hidden">
@@ -85,8 +84,6 @@ const LandingPage = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Features Section */}
                 <div className="mb-16">
                     <h3 className="text-4xl font-extrabold text-center text-white mb-10 drop-shadow-lg">
                         Unlock Key Advantages
@@ -131,8 +128,6 @@ const LandingPage = () => {
                         ))}
                     </div>
                 </div>
-
-                {/* Footer */}
                 <div className="text-center pt-10 border-t border-gray-700/50">
                     <p className="text-base text-gray-400 mb-3">
                         Ready to elevate your F1 strategy?
