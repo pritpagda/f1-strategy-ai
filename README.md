@@ -49,7 +49,7 @@ In Formula 1, every millisecond and split-second decision impacts race results. 
 
 F1 Strategy AI is a powerful, easy-to-use platform that enables users to:
 
-- ⏱️ **Predict lap times** with detailed input on tire compound, stint, lap number, tire wear, track & air conditions — accurate to within 0.1 seconds.  
+- ⏱️ **Predict lap times** with detailed input on tire compound, stint, lap number, tire wear, track & air conditions — accurate to within 0.5 seconds.  
 - 📊 **Analyze race strategies** using AI-driven recommendations for optimal pit stops and tire changes based on current and historical data via FastF1 telemetry.  
 - ⚙️ **Train custom AI models** by refining them on race-specific historical data to improve track and driver-specific predictions.
 
