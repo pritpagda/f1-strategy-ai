@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
 import {BarChart3, Car, ChevronRight, Clock, Settings, Zap} from 'lucide-react';
+=======
+import {Car, Clock, BarChart3, Settings, Zap, ChevronRight} from 'lucide-react';
+>>>>>>> f573c20f5619dc5a654373599aa9deb4b5c7eac1
 import {useNavigate} from 'react-router-dom';
 import Button from '../components/Button';
 
@@ -20,6 +24,7 @@ const LandingPage = () => {
         route: '/strategy'
     }];
 
+<<<<<<< HEAD
     return (<div
         className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 relative overflow-hidden font-inter p-4">
         <div className="absolute inset-0 opacity-20 z-0">
@@ -35,6 +40,40 @@ const LandingPage = () => {
                     <div className="relative p-1.5">
                         <Car
                             className="w-16 h-16 text-red-400 mr-4 group-hover:scale-110 transition-transform duration-300 transform-gpu"/>
+=======
+    return (
+        <div
+            className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 relative overflow-hidden font-inter p-4">
+            <div className="absolute inset-0 opacity-20 z-0">
+                <div className="absolute top-8 left-1/4 w-80 h-80 bg-red-500/30 rounded-full blur-3xl"/>
+                <div className="absolute bottom-8 right-1/4 w-72 h-72 bg-orange-500/20 rounded-full blur-3xl"/>
+                <div
+                    className="absolute top-1/2 left-1/2 w-64 h-64 bg-red-400/10 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"/>
+            </div>
+
+            <div className="relative z-10 container mx-auto px-4 max-w-6xl py-10">
+                <div className="text-center mb-16">
+                    <div className="flex justify-center items-center mb-6 group">
+                        <div className="relative p-1.5">
+                            <Car
+                                className="w-16 h-16 text-red-400 mr-4 group-hover:scale-110 transition-transform duration-300 transform-gpu"/>
+                            <div
+                                className="absolute -inset-2.5 bg-red-500/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                        </div>
+                        <div>
+                            <h1 className="text-6xl font-black bg-gradient-to-r from-red-400 via-orange-400 to-red-500 bg-clip-text text-transparent leading-tight drop-shadow-lg">
+                                F1 Strategy AI
+                            </h1>
+                            <div
+                                className="h-1 bg-gradient-to-r from-red-500 to-orange-500 mx-auto mt-3 rounded-full shadow-lg w-40"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="text-center mb-16">
+                    <div
+                        className="bg-black/50 backdrop-blur-xl border border-red-500/40 rounded-2xl p-8 max-w-4xl mx-auto shadow-2xl hover:border-red-400/60 transition-all duration-500 group relative overflow-hidden">
+>>>>>>> f573c20f5619dc5a654373599aa9deb4b5c7eac1
                         <div
                             className="absolute -inset-2.5 bg-red-500/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
                     </div>
@@ -78,6 +117,7 @@ const LandingPage = () => {
                         </div>
                     </div>
                 </div>
+<<<<<<< HEAD
             </div>
             <div className="mb-16">
                 <h3 className="text-4xl font-extrabold text-center text-white mb-10 drop-shadow-lg">
@@ -91,6 +131,18 @@ const LandingPage = () => {
 
                             <div
                                 className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"/>
+=======
+                <div className="mb-16">
+                    <h3 className="text-4xl font-extrabold text-center text-white mb-10 drop-shadow-lg">
+                        Unlock Key Advantages
+                    </h3>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+                        {features.map((feature, index) => (
+                            <div key={index} className="group">
+                                <div
+                                    className="bg-black/40 backdrop-blur-lg border border-red-500/30 rounded-2xl p-6 h-full hover:border-red-400/50 hover:bg-black/60 transition-all duration-500 hover:scale-105 cursor-pointer relative overflow-hidden shadow-xl"
+                                    onClick={() => navigate(feature.route)}>
+>>>>>>> f573c20f5619dc5a654373599aa9deb4b5c7eac1
 
                             <div className="relative z-10">
                                 <div className="flex items-center mb-4">
@@ -120,6 +172,15 @@ const LandingPage = () => {
                         </div>
                     </div>))}
                 </div>
+<<<<<<< HEAD
+=======
+                <div className="text-center pt-10 border-t border-gray-700/50">
+                    <p className="text-base text-gray-400 mb-3">
+                        Ready to elevate your F1 strategy?
+                    </p>
+                </div>
+
+>>>>>>> f573c20f5619dc5a654373599aa9deb4b5c7eac1
             </div>
             <div className="text-center pt-10 border-t border-gray-700/50">
                 <p className="text-base text-gray-400 mb-3">

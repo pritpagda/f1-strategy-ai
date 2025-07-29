@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
 import {Loader2, Play} from 'lucide-react';
+=======
+import {Play, Loader2} from 'lucide-react';
+>>>>>>> f573c20f5619dc5a654373599aa9deb4b5c7eac1
 
 interface TrainingFormProps {
     year: number;
@@ -45,6 +49,7 @@ const TrainingForm: React.FC<TrainingFormProps> = ({year, raceName, isTraining, 
                 disabled={isTraining}
                 className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-full font-extrabold text-sm transition-all duration-300 transform ${isTraining ? 'bg-red-900/60 text-red-300 cursor-not-allowed border border-red-900' : 'bg-red-600 hover:bg-red-700 active:scale-[0.98] shadow-lg hover:shadow-red-500/40'}`}
             >
+<<<<<<< HEAD
                 {isTraining ? (<>
                     <Loader2 className="w-4 h-4 animate-spin"/>
                     Training Model...
@@ -55,5 +60,22 @@ const TrainingForm: React.FC<TrainingFormProps> = ({year, raceName, isTraining, 
             </button>
         </div>
     </form>);
+=======
+                {isTraining ? (
+                    <>
+                        <Loader2 className="w-4 h-4 animate-spin"/>
+                        Training Model...
+                    </>
+                ) : (
+                    <>
+                        <Play className="w-4 h-4"/>
+                        Start Training
+                    </>
+                )}
+            </button>
+        </div>
+    </form>
+);
+>>>>>>> f573c20f5619dc5a654373599aa9deb4b5c7eac1
 
 export default TrainingForm;
