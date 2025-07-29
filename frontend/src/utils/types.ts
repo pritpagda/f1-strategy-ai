@@ -49,7 +49,7 @@ export interface StintLapData {
 export interface StrategyData {
   current_lap_data: CurrentLapData;
   stint_history: StintLapData[];
-  race_progress: number; // from 0 to 1
+  race_progress: number;
 }
 
 

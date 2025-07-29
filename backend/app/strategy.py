@@ -38,14 +38,8 @@ Race Progress: {race_progress * 100:.1f}%
         if not match:
             raise ValueError("No valid JSON block in LLM response.")
         data = json.loads(match.group())
-        return {
-            "recommendation": data.get("recommendation", "Continue"),
-            "reasoning": data.get("reasoning", "No reasoning provided."),
-            "confidence": data.get("confidence", "Medium"),
-        }
+        return {"recommendation": data.get("recommendation", "Continue"),
+                "reasoning": data.get("reasoning", "No reasoning provided."),
+                "confidence": data.get("confidence", "Medium"), }
     except Exception as e:
-        return {
-            "recommendation": "Continue",
-            "reasoning": f"(Fallback: Gemini error — {e})",
-            "confidence": "Low",
-        }
+        return {"recommendation": "Continue", "reasoning": f"(Fallback: Gemini error — {e})", "confidence": "Low", }

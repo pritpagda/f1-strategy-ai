@@ -1,23 +1,30 @@
 import os
 import joblib
 import pandas as pd
+from huggingface_hub import hf_hub_download
+from dotenv import load_dotenv
+
+load_dotenv()
 
 LAP_TIME_MODEL = None
 MODEL_FEATURES = []
 
-MODEL_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    'models',
-    'f1_laptime_model.joblib'
-)
-
+REPO_ID = "pritpagda/f1-strategy-model"
+MODEL_FILENAME = "f1_laptime_model.joblib"
+HF_TOKEN = os.getenv("HF_TOKEN")  # from .env
 
 def load_model():
     global LAP_TIME_MODEL, MODEL_FEATURES
     try:
-        LAP_TIME_MODEL = joblib.load(MODEL_PATH)
+        model_path = hf_hub_download(
+            repo_id=REPO_ID,
+            filename=MODEL_FILENAME,
+            token=HF_TOKEN
+        )
+        LAP_TIME_MODEL = joblib.load(model_path)
         MODEL_FEATURES = list(getattr(LAP_TIME_MODEL, 'feature_names_in_', []))
-    except Exception:
+    except Exception as e:
+        print(f"Error loading model: {e}")
         LAP_TIME_MODEL = None
         MODEL_FEATURES = []
 
@@ -35,10 +42,8 @@ def prepare_features(input_data: dict) -> pd.DataFrame:
         df[f'compound_{comp}'] = (df.get('compound', '').str.upper() == comp).astype(int)
     df.drop(columns=['compound'], inplace=True, errors='ignore')
 
-    teams = [
-        'AlphaTauri', 'Alpine', 'Aston Martin', 'Ferrari', 'Haas F1 Team',
-        'McLaren', 'Mercedes', 'Red Bull Racing', 'Williams'
-    ]
+    teams = ['AlphaTauri', 'Alpine', 'Aston Martin', 'Ferrari', 'Haas F1 Team', 'McLaren', 'Mercedes',
+             'Red Bull Racing', 'Williams']
     team_col = df.get('team', '').fillna('').astype(str)
     for team in teams:
         col_name = f'team_{team.replace(" ", "")}'

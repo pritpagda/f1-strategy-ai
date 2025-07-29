@@ -17,20 +17,15 @@ def fetch_and_clean_f1_data(year: int, gp: str, session_type: str) -> pd.DataFra
 
     laps = session.laps
     valid_laps = laps[
-        (laps['LapTime'].notna()) &
-        (laps['IsAccurate']) &
-        (laps['PitOutTime'].isna()) &
-        (laps['PitInTime'].isna()) &
-        (laps['TrackStatus'] == '1')
-        ].copy()
+        (laps['LapTime'].notna()) & (laps['IsAccurate']) & (laps['PitOutTime'].isna()) & (laps['PitInTime'].isna()) & (
+                laps['TrackStatus'] == '1')].copy()
 
     valid_laps['LapTimeSeconds'] = valid_laps['LapTime'].dt.total_seconds()
     valid_laps['LapTimestamp'] = start_time + valid_laps['LapStartTime']
 
-    df = valid_laps[[
-        'LapNumber', 'Stint', 'Driver', 'Compound', 'TyreLife',
-        'LapTimeSeconds', 'Team', 'TrackStatus', 'FreshTyre', 'LapTimestamp'
-    ]].copy()
+    df = valid_laps[
+        ['LapNumber', 'Stint', 'Driver', 'Compound', 'TyreLife', 'LapTimeSeconds', 'Team', 'TrackStatus', 'FreshTyre',
+         'LapTimestamp']].copy()
 
     weather = getattr(session, 'weather_data', pd.DataFrame())
     if not weather.empty:
@@ -40,13 +35,8 @@ def fetch_and_clean_f1_data(year: int, gp: str, session_type: str) -> pd.DataFra
         df.sort_values('LapTimestamp', inplace=True)
         weather.sort_values('WeatherTimestamp', inplace=True)
 
-        df = pd.merge_asof(
-            df,
-            weather.drop(columns='Time'),
-            left_on='LapTimestamp',
-            right_on='WeatherTimestamp',
-            direction='nearest'
-        ).drop(columns='WeatherTimestamp')
+        df = pd.merge_asof(df, weather.drop(columns='Time'), left_on='LapTimestamp', right_on='WeatherTimestamp',
+                           direction='nearest').drop(columns='WeatherTimestamp')
     else:
         for col in ['AirTemp', 'TrackTemp', 'Humidity', 'WindSpeed']:
             df[col] = pd.NA

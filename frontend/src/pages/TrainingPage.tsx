@@ -23,7 +23,7 @@ const TrainingPage: React.FC = () => {
         setIsTraining(true);
         setResultMessage({status: null, text: ''});
         try {
-            const response = await api.post('api/train', formData);
+            const response = await api.post('/train', formData);
             setResultMessage({
                 status: response.status === 200 ? 'success' : 'error',
                 text: response.status === 200

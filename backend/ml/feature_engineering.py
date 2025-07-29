@@ -12,8 +12,7 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
             df[col] = df[col].astype('category')
 
     df['rolling_avg_lap_time'] = df.groupby('driver')['lap_time_seconds'].transform(
-        lambda x: x.rolling(window=3, min_periods=1).mean()
-    )
+        lambda x: x.rolling(window=3, min_periods=1).mean())
     df['delta_to_rolling_avg'] = df['lap_time_seconds'] - df['rolling_avg_lap_time']
     df['lap_number_in_stint'] = df.groupby(['driver', 'stint']).cumcount() + 1
 
@@ -33,22 +32,10 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
 
     df.rename(columns={'humidity': 'humidity_percent'}, inplace=True)
 
-    final_columns = [
-                        'lap_time_seconds',
-                        'rolling_avg_lap_time',
-                        'delta_to_rolling_avg',
-                        'tyre_life',
-                        'lap_number_in_stint',
-                        'track_temp_delta_avg',
-                        'track_status_numeric',
-                        'air_temp',
-                        'humidity_percent',
-                        'wind_speed',
-                        'driver',
-                        'lap_number',
-                        'stint',
-                        'fresh_tyre',
-                        'lap_timestamp',
-                    ] + [col for col in df.columns if col.startswith('compound_') or col.startswith('team_')]
+    final_columns = ['lap_time_seconds', 'rolling_avg_lap_time', 'delta_to_rolling_avg', 'tyre_life',
+                     'lap_number_in_stint', 'track_temp_delta_avg', 'track_status_numeric', 'air_temp',
+                     'humidity_percent', 'wind_speed', 'driver', 'lap_number', 'stint', 'fresh_tyre',
+                     'lap_timestamp', ] + [col for col in df.columns if
+                                           col.startswith('compound_') or col.startswith('team_')]
 
     return df[[col for col in final_columns if col in df.columns]].copy()
